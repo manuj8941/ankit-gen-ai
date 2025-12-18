@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= title %> - Admin</title>
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/admin.css">
+    </head>
+
+    <body class="admin-body">
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="logo">
+                    <a href="/admin">Admin Panel</a>
+                </div>
+                <nav class="admin-nav">
+                    <a href="/admin/tree" class="active">Content Tree</a>
+                    <a href="/" target="_blank">View Site</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <%- body %>
+        </main>
+    </body>
+
+</html>

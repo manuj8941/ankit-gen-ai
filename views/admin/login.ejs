@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Login</title>
+        <link rel="stylesheet" href="/css/main.css">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            }
+
+            .login-container {
+                background: white;
+                padding: 3rem;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                max-width: 400px;
+                width: 90%;
+            }
+
+            .login-header {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .login-header h1 {
+                margin: 0 0 0.5rem 0;
+                color: #333;
+                font-size: 2rem;
+            }
+
+            .login-header p {
+                margin: 0;
+                color: #666;
+            }
+
+            .login-form {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .form-group label {
+                font-weight: 600;
+                color: #333;
+            }
+
+            .form-group input {
+                padding: 0.75rem;
+                border: 2px solid #e0e0e0;
+                border-radius: 6px;
+                font-size: 1rem;
+                transition: border-color 0.3s;
+            }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+
+            .btn-login {
+                padding: 0.875rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+
+            .error-message {
+                background: #fee;
+                color: #c33;
+                padding: 0.75rem;
+                border-radius: 6px;
+                border-left: 4px solid #c33;
+                font-size: 0.9rem;
+            }
+
+            .login-footer {
+                margin-top: 2rem;
+                text-align: center;
+                color: #666;
+                font-size: 0.875rem;
+            }
+
+            .default-password {
+                margin-top: 1rem;
+                padding: 1rem;
+                background: #f0f9ff;
+                border-left: 4px solid #3b82f6;
+                border-radius: 4px;
+            }
+
+            .default-password code {
+                background: #e0f2fe;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-family: 'Courier New', monospace;
+                color: #1e40af;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="login-container">
+            <div class="login-header">
+                <h1>🔐 Admin Login</h1>
+                <p>Enter password to access admin panel</p>
+            </div>
+
+            <% if (error) { %>
+            <div class="error-message">
+                ❌ Incorrect password. Please try again.
+            </div>
+            <% } %>
+
+            <form method="POST" action="/admin/authenticate" class="login-form">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autofocus
+                        placeholder="Enter admin password">
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Login to Admin Panel
+                </button>
+            </form>
+
+            <div class="default-password">
+                <strong>⚠️ Development Mode</strong>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                    Default password: <code>admin123</code>
+                </p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: #666;">
+                    Set ADMIN_PASSWORD env variable to change
+                </p>
+            </div>
+
+            <div class="login-footer">
+                <a href="/" style="color: #667eea; text-decoration: none;">← Back to site</a>
+            </div>
+        </div>
+    </body>
+
+</html>

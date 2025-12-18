@@ -1,0 +1,11 @@
+<% if (ancestors && ancestors.length > 0) { %>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <% ancestors.forEach(ancestor => { %>
+    <span class="separator">›</span>
+    <a href="/docs/<%= ancestor.slug %>"><%= ancestor.title %></a>
+    <% }) %>
+    <span class="separator">›</span>
+    <span class="current"><%= page.title %></span>
+</nav>
+<% } %>

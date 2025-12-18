@@ -1,0 +1,14 @@
+<header class="site-header">
+    <div class="header-content">
+        <div class="logo">
+            <a href="/">Gen AI Docs</a>
+        </div>
+        <nav class="top-nav">
+            <% rootPages.forEach(rootPage => { %>
+            <a href="/docs/<%= rootPage.slug %>" class="<%= currentSlug === rootPage.slug ? 'active' : '' %>">
+                <%= rootPage.title %>
+            </a>
+            <% }) %>
+        </nav>
+    </div>
+</header>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Content Tree - Admin</title>
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/admin.css">
+    </head>
+
+    <body class="admin-body">
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="logo">
+                    <a href="/admin">Admin Panel</a>
+                </div>
+                <nav class="admin-nav">
+                    <a href="/admin/tree" class="active">Content Tree</a>
+                    <a href="/" target="_blank">View Site</a>
+                    <a href="/admin/logout" style="color: #f44336;">Logout</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-container">
+                <div class="admin-toolbar">
+                    <h1>Content Tree</h1>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-primary" onclick="addRootPage()">
+                            <span>+</span> Add Root Page
+                        </button>
+                        <button class="btn btn-secondary" onclick="expandAll()">Expand All</button>
+                        <button class="btn btn-secondary" onclick="collapseAll()">Collapse All</button>
+                    </div>
+                </div>
+
+                <div class="tree-container">
+                    <div class="tree-help">
+                        <p><strong>Tree Controls:</strong></p>
+                        <ul>
+                            <li>Click folder icon to expand/collapse</li>
+                            <li>Drag & drop to reorder or move pages</li>
+                            <li>Use action buttons to add, edit, or delete</li>
+                        </ul>
+                    </div>
+
+                    <div id="tree-root" class="tree-root">
+                        <% 
+      function renderTreeNode(nodes, level = 0) {
+        if (!nodes || nodes.length === 0) return;
+        
+        nodes.forEach(node => {
+          const hasChildren = node.children && node.children.length > 0;
+      %>
+                        <div class="tree-node" data-id="<%= node.id %>" data-parent="<%= node.parent_id || 'null' %>"
+                            draggable="true">
+                            <div class="tree-node-content">
+                                <div class="tree-node-left">
+                                    <% if (hasChildren) { %>
+                                    <button class="tree-toggle" onclick="toggleNode(this)">
+                                        <span class="toggle-icon">▶</span>
+                                    </button>
+                                    <% } else { %>
+                                    <span class="tree-spacer"></span>
+                                    <% } %>
+
+                                    <span class="drag-handle">⋮⋮</span>
+
+                                    <span class="tree-node-title">
+                                        <strong><%= node.title %></strong>
+                                        <span class="tree-node-meta">
+                                            /<%= node.slug %>
+                                            [<%= node.layout_type %>]
+                                            <% if (node.status !== 'published') { %>
+                                            <span class="status-badge"><%= node.status %></span>
+                                            <% } %>
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <div class="tree-node-actions">
+                                    <button class="btn-icon btn-add-child" data-page-id="<%= node.id %>"
+                                        title="Add child">
+                                        <span>+</span>
+                                    </button>
+                                    <a href="/admin/edit/<%= node.id %>" class="btn-icon" title="Edit">
+                                        <span>✎</span>
+                                    </a>
+                                    <a href="/docs/<%= node.slug %>" target="_blank" class="btn-icon" title="View">
+                                        <span>👁</span>
+                                    </a>
+                                    <button class="btn-icon btn-danger btn-delete-page" data-page-id="<%= node.id %>"
+                                        data-page-title="<%= node.title %>" title="Delete">
+                                        <span>🗑</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <% if (hasChildren) { %>
+                            <div class="tree-children">
+                                <%- renderTreeNode(node.children, level + 1) %>
+                            </div>
+                            <% } %>
+                        </div>
+                        <%
+        });
+      }
+      
+      renderTreeNode(tree);
+      %>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="/js/admin-tree.js"></script>
+    </body>
+
+</html>

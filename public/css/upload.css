@@ -1,0 +1,56 @@
+/* Image upload widget for admin editor */
+.upload-widget
+{
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f7fafc;
+    border-radius: 6px;
+    border: 2px dashed #cbd5e0;
+}
+
+.upload-widget input[type="file"]
+{
+    display: none;
+}
+
+.upload-btn
+{
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+}
+
+.upload-btn:hover
+{
+    background: #5568d3;
+}
+
+.upload-progress
+{
+    margin-top: 0.5rem;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.upload-result
+{
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #c6f6d5;
+    border: 1px solid #9ae6b4;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #22543d;
+}
+
+.upload-error
+{
+    background: #fed7d7;
+    border-color: #fc8181;
+    color: #742a2a;
+}

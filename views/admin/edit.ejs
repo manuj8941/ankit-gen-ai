@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= title %> - Admin</title>
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/admin.css">
+        <link rel="stylesheet" href="/css/upload.css">
+    </head>
+
+    <body class="admin-body" data-is-new="<%= isNew %>">
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="logo">
+                    <a href="/admin">Admin Panel</a>
+                </div>
+                <nav class="admin-nav">
+                    <a href="/admin/tree">Content Tree</a>
+                    <a href="/" target="_blank">View Site</a>
+                    <a href="/admin/logout" style="color: #f44336;">Logout</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-container">
+                <div class="admin-toolbar">
+                    <h1><%= isNew ? 'New Page' : 'Edit Page' %></h1>
+                    <div class="toolbar-actions">
+                        <a href="/admin/tree" class="btn btn-secondary">← Back to Tree</a>
+                    </div>
+                </div>
+
+                <form action="/admin/save" method="POST" class="page-form">
+                    <input type="hidden" name="id" value="<%= isNew ? 'new' : page.id %>">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title">Title *</label>
+                            <input type="text" id="title" name="title" value="<%= isNew ? '' : page.title %>" required
+                                placeholder="Page Title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="slug">Slug *</label>
+                            <input type="text" id="slug" name="slug" value="<%= isNew ? '' : page.slug %>" required
+                                pattern="[a-z0-9-]+" placeholder="page-slug">
+                            <small>Lowercase letters, numbers, and hyphens only</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="parent_id">Parent Page</label>
+                            <select id="parent_id" name="parent_id">
+                                <option value="">None (Root Page)</option>
+                                <% allPages.forEach(p => { 
+                if (!page || p.id !== page.id) { %>
+                                <option value="<%= p.id %>" <%= parentId === p.id ? 'selected' : '' %>>
+                                    <%= p.title %> (/<%= p.slug %>)
+                                </option>
+                                <% }
+              }) %>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="layout_type">Layout Type *</label>
+                            <select id="layout_type" name="layout_type" required>
+                                <option value="doc" <%= !isNew && page.layout_type === 'doc' ? 'selected' : '' %>>
+                                    Documentation
+                                </option>
+                                <option value="tutorial"
+                                    <%= !isNew && page.layout_type === 'tutorial' ? 'selected' : '' %>>
+                                    Tutorial
+                                </option>
+                                <option value="landing"
+                                    <%= !isNew && page.layout_type === 'landing' ? 'selected' : '' %>>
+                                    Landing Page
+                                </option>
+                                <option value="video" <%= !isNew && page.layout_type === 'video' ? 'selected' : '' %>>
+                                    Video
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="order_index">Order Index</label>
+                            <input type="number" id="order_index" name="order_index"
+                                value="<%= isNew ? 0 : page.order_index %>" min="0">
+                            <small>Controls ordering among siblings (lower = first)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status *</label>
+                            <select id="status" name="status" required>
+                                <option value="published"
+                                    <%= !isNew && page.status === 'published' ? 'selected' : '' %>>
+                                    Published
+                                </option>
+                                <option value="draft" <%= !isNew && page.status === 'draft' ? 'selected' : '' %>>
+                                    Draft
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label for="content">Content (Markdown)</label>
+                        <div class="upload-widget">
+                            <label for="imageUpload" class="upload-btn">📷 Upload Image</label>
+                            <input type="file" id="imageUpload" accept="image/*">
+                            <div id="uploadStatus"></div>
+                        </div>
+                        <textarea id="content" name="content" rows="20"
+                            placeholder="# Heading 1&#10;&#10;Write your content in **Markdown** format..."><%= isNew ? '' : page.content %></textarea>
+                        <small>
+                            <strong>Markdown Help:</strong>
+                            # Heading | **bold** | *italic* | [link](url) | ![image](url) |
+                            <code>`code`</code> | ```code block```
+                        </small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <%= isNew ? 'Create Page' : 'Update Page' %>
+                        </button>
+                        <a href="/admin/tree" class="btn btn-secondary">Cancel</a>
+                        <% if (!isNew) { %>
+                        <a href="/docs/<%= page.slug %>" target="_blank" class="btn btn-secondary">Preview</a>
+                        <% } %>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <script>
+            // Auto-generate slug from title
+            const titleInput = document.getElementById( 'title' );
+            const slugInput = document.getElementById( 'slug' );
+
+            // Set from data attribute to avoid EJS in JS
+            const isNew = document.body.dataset.isNew === 'true';
+
+            titleInput.addEventListener( 'input', ( e ) =>
+            {
+                if ( isNew )
+                {
+                    const slug = e.target.value
+                        .toLowerCase()
+                        .replace( /[^a-z0-9]+/g, '-' )
+                        .replace( /^-+|-+$/g, '' );
+                    slugInput.value = slug;
+                }
+            } );
+
+            // Form validation
+            document.querySelector( '.page-form' ).addEventListener( 'submit', ( e ) =>
+            {
+                const slug = slugInput.value;
+                if ( !/^[a-z0-9-]+$/.test( slug ) )
+                {
+                    e.preventDefault();
+                    alert( 'Slug can only contain lowercase letters, numbers, and hyphens' );
+                    slugInput.focus();
+                }
+            } );
+
+            // Image upload handler
+            const imageUpload = document.getElementById( 'imageUpload' );
+            const contentTextarea = document.getElementById( 'content' );
+            const uploadStatus = document.getElementById( 'uploadStatus' );
+
+            imageUpload.addEventListener( 'change', async ( e ) =>
+            {
+                const file = e.target.files[ 0 ];
+                if ( !file ) return;
+
+                const formData = new FormData();
+                formData.append( 'image', file );
+
+                uploadStatus.innerHTML = '<div class="upload-progress">Uploading...</div>';
+
+                try
+                {
+                    const response = await fetch( '/admin/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    } );
+
+                    const data = await response.json();
+
+                    if ( data.success )
+                    {
+                        const imageMarkdown = `![Image](${ data.url })`;
+                        const cursorPos = contentTextarea.selectionStart;
+                        const textBefore = contentTextarea.value.substring( 0, cursorPos );
+                        const textAfter = contentTextarea.value.substring( cursorPos );
+
+                        contentTextarea.value = textBefore + imageMarkdown + textAfter;
+                        contentTextarea.focus();
+                        contentTextarea.setSelectionRange( cursorPos + imageMarkdown.length, cursorPos + imageMarkdown.length );
+
+                        uploadStatus.innerHTML = `<div class="upload-result">✓ Image uploaded! Markdown inserted.</div>`;
+                        setTimeout( () => uploadStatus.innerHTML = '', 3000 );
+                    } else
+                    {
+                        uploadStatus.innerHTML = `<div class="upload-result upload-error">✗ Error: ${ data.error }</div>`;
+                    }
+                } catch ( error )
+                {
+                    uploadStatus.innerHTML = `<div class="upload-result upload-error">✗ Upload failed: ${ error.message }</div>`;
+                }
+
+                // Reset file input
+                imageUpload.value = '';
+            } );
+        </script>
+    </body>
+
+</html>

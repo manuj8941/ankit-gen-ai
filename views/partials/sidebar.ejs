@@ -1,0 +1,31 @@
+<% if (fullSidebar && fullSidebar.length > 0) { %>
+<aside class="sidebar">
+    <nav class="sidebar-nav">
+        <% if (rootPage) { %>
+        <div class="sidebar-header">
+            <a href="/docs/<%= rootPage.slug %>"><%= rootPage.title %></a>
+        </div>
+        <% } %>
+
+        <% 
+    function renderSidebarTree(items, level = 0) {
+      if (!items || items.length === 0) return;
+    %>
+        <ul class="sidebar-list level-<%= level %>">
+            <% items.forEach(item => { %>
+            <li class="sidebar-item">
+                <a href="/docs/<%= item.slug %>" class="<%= currentSlug === item.slug ? 'active' : '' %>">
+                    <%= item.title %>
+                </a>
+                <% if (item.children && item.children.length > 0) { %>
+                <%- renderSidebarTree(item.children, level + 1) %>
+                <% } %>
+            </li>
+            <% }) %>
+        </ul>
+        <% } %>
+
+        <%- renderSidebarTree(fullSidebar, 0) %>
+    </nav>
+</aside>
+<% } %>
