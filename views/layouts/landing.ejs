@@ -13,9 +13,53 @@
 
         <div class="hero">
             <div class="hero-content">
+                <div class="hero-badge">🤖 Learn Generative AI</div>
                 <h1><%= page.title %></h1>
-                <div class="content">
-                    <%- page.content %>
+                <p class="hero-subtitle">
+                    Comprehensive curriculum covering GenAI, LLMs, training techniques, and practical applications
+                </p>
+                <div class="hero-buttons">
+                    <a href="/docs/introduction-to-genai" class="btn-primary">Get Started</a>
+                    <a href="/docs/applications-of-llm" class="btn-secondary">View Tutorials</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Comprehensive Content</h3>
+                    <p>107 topics covering everything from AI basics to advanced LLM applications</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Hands-on Tutorials</h3>
+                    <p>Build real projects with RAG, LangChain, and LLM agents</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Structured Learning</h3>
+                    <p>Progress from fundamentals to advanced topics with clear pathways</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Up-to-Date</h3>
+                    <p>Latest techniques including GPT-4, LoRA, RLHF, and more</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="topics-preview">
+            <div class="topics-container">
+                <h2>What You'll Learn</h2>
+                <div class="topics-grid">
+                    <% rootPages.filter(p => p.slug !== 'home').forEach(topic => { %>
+                    <a href="/docs/<%= topic.slug %>" class="topic-card">
+                        <h3><%= topic.title %></h3>
+                        <span class="topic-arrow">→</span>
+                    </a>
+                    <% }) %>
                 </div>
             </div>
         </div>
