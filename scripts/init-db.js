@@ -239,27 +239,38 @@ async function initializeDatabase ()
         saveDatabase();
         console.log( 'Database saved successfully!' );
 
-        // Display structure
-        console.log( '\nDatabase structure:' );
-        const pages = db.exec( 'SELECT id, title, slug, parent_id, layout_type FROM pages ORDER BY order_index' );
-        if ( pages[ 0 ] )
+        // Display structure only if run directly (not from server)
+        if ( require.main === module )
         {
-            console.table( pages[ 0 ].values.map( row => ( {
-                id: row[ 0 ],
-                title: row[ 1 ],
-                slug: row[ 2 ],
-                parent_id: row[ 3 ] || 'NULL',
-                layout: row[ 4 ]
-            } ) ) );
+            console.log( '\nDatabase structure:' );
+            const pages = db.exec( 'SELECT id, title, slug, parent_id, layout_type FROM pages ORDER BY order_index' );
+            if ( pages[ 0 ] )
+            {
+                console.table( pages[ 0 ].values.map( row => ( {
+                    id: row[ 0 ],
+                    title: row[ 1 ],
+                    slug: row[ 2 ],
+                    parent_id: row[ 3 ] || 'NULL',
+                    layout: row[ 4 ]
+                } ) ) );
+            }
+            console.log( '\nDatabase initialization complete!' );
         }
 
-        closeDatabase();
-        console.log( '\nDatabase initialization complete!' );
+        // Don't close database if called from server
+        if ( require.main === module )
+        {
+            closeDatabase();
+        }
 
     } catch ( error )
     {
         console.error( 'Database initialization failed:', error );
-        process.exit( 1 );
+        if ( require.main === module )
+        {
+            process.exit( 1 );
+        }
+        throw error;
     }
 }
 

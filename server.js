@@ -2,6 +2,7 @@ const express = require( 'express' );
 const session = require( 'express-session' );
 const path = require( 'path' );
 const { initDatabase, closeDatabase } = require( './db/database' );
+const { initializeDatabase } = require( './scripts/init-db' );
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -71,9 +72,12 @@ async function startServer ()
 {
     try
     {
-        console.log( 'Initializing database...' );
-        await initDatabase();
-        console.log( 'Database initialized successfully' );
+        console.log( 'Initializing database with seed data...' );
+
+        // This will create schema and insert seed data if database is empty
+        await initializeDatabase();
+
+        console.log( 'Database ready!' );
 
         app.listen( PORT, () =>
         {
